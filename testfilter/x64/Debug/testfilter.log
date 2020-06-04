@@ -1,0 +1,26 @@
+﻿  Building 'testfilter' with toolset 'WindowsKernelModeDriver10.0' and the 'Desktop' target platform.
+  Stamping x64\Debug\testfilter.inf
+  Stamping [Version] section with DriverVer=06/04/2020,2.3.17.558
+C:\Users\0day\source\repos\testfilter\testfilter\testfilter.inf : warning 1420: [DefaultInstall]-based INF cannot be processed as Primitive.
+C:\Users\0day\source\repos\testfilter\testfilter\testfilter.inf(25-25): warning 1421: Section [DefaultInstall] should have an architecture decoration.
+C:\Users\0day\source\repos\testfilter\testfilter\testfilter.inf(36-36): warning 1421: Section [DefaultUninstall] should have an architecture decoration.
+C:\Users\0day\source\repos\testfilter\testfilter\testfilter.inf(74-74): warning 1205: Section [MiniFilter.DriverFiles] referenced from DelFiles and CopyFiles directive.
+  testfilter.c
+  testfilter.vcxproj -> C:\Users\0day\source\repos\testfilter\x64\Debug\testfilter.sys
+  Done Adding Additional Store
+  Successfully signed: C:\Users\0day\source\repos\testfilter\x64\Debug\testfilter.sys
+  
+  .........................
+  Signability test complete.
+  
+  Errors:
+  None
+  
+  Warnings:
+  None
+  
+  Catalog generation complete.
+  C:\Users\0day\source\repos\testfilter\x64\Debug\testfilter\testfilter.cat
+  Done Adding Additional Store
+  Successfully signed: C:\Users\0day\source\repos\testfilter\x64\Debug\testfilter\testfilter.cat
+  
