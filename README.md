@@ -1,2 +1,2 @@
 # SymBlock
-A Ongoing project to detect and block symlink
+A Ongoing project to detect and block Elevation of privilege using Symbolic links
