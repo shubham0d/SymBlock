@@ -10,7 +10,7 @@ Signature   = "$Windows NT$"
 Class = "ActivityMonitor"
 ClassGuid = {b86dff51-a31e-4bac-b3cf-e8cfe75c9fc2}
 Provider    = %ManufacturerName%
-DriverVer = 06/04/2020,2.3.17.558
+DriverVer = 06/05/2020,1.43.51.831
 CatalogFile = testfilter.cat
 PnpLockDown=1
 
