@@ -307,7 +307,6 @@ testfilterFSPreOperation(
     UNREFERENCED_PARAMETER(CompletionContext);
     PFLT_FILE_NAME_INFORMATION FileNameInfo;
     WCHAR NameOfTarget[310] = { 0 };
-    //WCHAR MinorFunc[300] = { 0 };
     PT_DBG_PRINT(PTDBG_TRACE_ROUTINES,
         ("testfilter!testfilterPreOperation: Entered\n"));
 
@@ -323,19 +322,22 @@ testfilterFSPreOperation(
 
         if (NT_SUCCESS(status))
         {
-            
-            // this is our target
+            // If IO Control code is 589988 that means FSCTL_SET_REPARSE_POINT is passed in DeviceIOControl
+            // For directory junction creation FSCTL_SET_REPARSE_POINT control code is used.
+            if (Data->Iopb->Parameters.DeviceIoControl.Buffered.IoControlCode != 589988) {
+                FltReleaseFileNameInformation(FileNameInfo);
+                return FLT_PREOP_SUCCESS_NO_CALLBACK;
+            }
+            // Only proceed if Minor funtion is IRP_MN_USER_FS_REQUEST
+            // this minor funtion show that the FSCTL request are on behalf of user mode application
             if (Data->Iopb->MinorFunction == IRP_MN_USER_FS_REQUEST) {
 
                 // If Target filename is null
                 if (Data->Iopb->TargetFileObject->FileName.Length == 0) {
                     FltReleaseFileNameInformation(FileNameInfo);
-                    return FLT_PREOP_COMPLETE;
+                    return FLT_PREOP_SUCCESS_NO_CALLBACK;
                 }
-                if (Data->Iopb->Parameters.DeviceIoControl.Buffered.IoControlCode != 589988) {
-                    FltReleaseFileNameInformation(FileNameInfo);
-                    return FLT_PREOP_COMPLETE;
-                }
+                
                 
                 if (Data->Iopb->TargetFileObject->FileName.Length < 300){
                     RtlCopyMemory(NameOfTarget, Data->Iopb->TargetFileObject->FileName.Buffer, Data->Iopb->TargetFileObject->FileName.Length);
@@ -343,13 +345,10 @@ testfilterFSPreOperation(
                 else {
                     KdPrint(("Filename not saved since to large"));
                 }
-
+                // For Directory junction - OutputBuffer length will be 0 and InputBuffer will be greater the 0.
                 if (Data->Iopb->Parameters.DeviceIoControl.Buffered.InputBufferLength > 0 && Data->Iopb->Parameters.DeviceIoControl.Buffered.OutputBufferLength == 0) {
                     REPARSE_DATA_BUFFER* inBuffer;
                     inBuffer = (REPARSE_DATA_BUFFER*)Data->Iopb->Parameters.DeviceIoControl.Buffered.SystemBuffer;
-
-
-
 
                     if (wcsstr(inBuffer->MountPointReparseBuffer.PathBuffer, L"\\RPC Control") != NULL) {
                         KdPrint(("Symlink Attack detected \r\n"));
@@ -372,18 +371,16 @@ testfilterFSPreOperation(
             }
             
         }
-        
-        
 
         FltReleaseFileNameInformation(FileNameInfo);
     }
 
         
   
-    return FLT_PREOP_COMPLETE;
+    return FLT_PREOP_SUCCESS_NO_CALLBACK;
 }
 
-
+/*
 FLT_POSTOP_CALLBACK_STATUS
 testfilterFSPostOperation(
     _Inout_ PFLT_CALLBACK_DATA Data,
@@ -405,3 +402,4 @@ testfilterFSPostOperation(
     return FLT_POSTOP_FINISHED_PROCESSING;
 }
 
+*/
